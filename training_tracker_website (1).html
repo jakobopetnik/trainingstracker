@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Training Tracker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #e0e0e0;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      padding: 25px;
+      border-radius: 20px;
+      background: #e0e0e0;
+      box-shadow: 10px 10px 20px #bebebe,
+                  -10px -10px 20px #ffffff;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 15px;
+      border: none;
+      font-size: 15px;
+      background: #e0e0e0;
+      box-shadow: inset 6px 6px 12px #bebebe,
+                  inset -6px -6px 12px #ffffff;
+    }
+    button {
+      padding: 12px 20px;
+      width: 100%;
+      border: none;
+      border-radius: 15px;
+      background: #e0e0e0;
+      box-shadow: 6px 6px 12px #bebebe,
+                  -6px -6px 12px #ffffff;
+      cursor: pointer;
+      font-size: 16px;
+      margin-top: 10px;
+      transition: 0.2s;
+    }
+    button:active {
+      box-shadow: inset 6px 6px 12px #bebebe,
+                  inset -6px -6px 12px #ffffff;
+    }
+    .entry {
+      background: #e0e0e0;
+      padding: 15px;
+      border-radius: 15px;
+      margin-top: 15px;
+      box-shadow: inset 6px 6px 12px #bebebe,
+                  inset -6px -6px 12px #ffffff;
+    }
+    .section {
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Training Tracker</h1>
+
+    <div class="section">
+      <h3>Neue Trainingseinheit</h3>
+      <input id="date" type="date" />
+      <textarea id="workout" placeholder="Übungen + Sätze eingeben..."></textarea>
+      <textarea id="notes" placeholder="Wie war das Training?"></textarea>
+      <button onclick="addEntry()">Speichern</button>
+    </div>
+
+    <div class="section">
+      <h3>Deine Einträge</h3>
+      <div id="entries"></div>
+    </div>
+  </div>
+
+  <script>
+    // Local Storage Key
+    const STORAGE_KEY = 'trainingEntries';
+
+    // Lade gespeicherte Einträge
+    const savedEntries = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    savedEntries.forEach(entry => displayEntry(entry));
+
+    function addEntry() {
+      const date = document.getElementById('date').value;
+      const workout = document.getElementById('workout').value;
+      const notes = document.getElementById('notes').value;
+
+      if (!date || !workout) return alert("Bitte Datum und Workout eingeben!");
+
+      const entry = { date, workout, notes };
+      savedEntries.push(entry);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(savedEntries));
+
+      displayEntry(entry);
+
+      document.getElementById('date').value = '';
+      document.getElementById('workout').value = '';
+      document.getElementById('notes').value = '';
+    }
+
+    function displayEntry(entry) {
+      const entryDiv = document.createElement('div');
+      entryDiv.className = 'entry';
+      entryDiv.innerHTML = `<strong>${entry.date}</strong><p>${entry.workout}</p><em>${entry.notes}</em>`;
+      document.getElementById('entries').appendChild(entryDiv);
+    }
+  </script>
+</body>
+</html>
